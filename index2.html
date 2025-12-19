@@ -1,0 +1,1414 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AI Resume Builder — Build a Professional Resume in Minutes</title>
+  <!-- Tailwind (CDN) -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Bootstrap 5 (CDN) -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"/>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <!-- Icons -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"/>
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <!-- AOS for Advanced Animations -->
+  <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+  <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+  <style>
+    :root{
+      --bg: #070A12;
+      --card: rgba(255,255,255,.06);
+      --card2: rgba(255,255,255,.08);
+      --stroke: rgba(255,255,255,.12);
+      --text: rgba(255,255,255,.88);
+      --muted: rgba(255,255,255,.66);
+      --shadow: 0 22px 60px rgba(0,0,0,.45);
+      --shadow2: 0 10px 30px rgba(0,0,0,.35);
+    }
+    html, body { height: 100%; }
+    body{
+      font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      background: radial-gradient(1200px 800px at 15% -10%, rgba(99,102,241,.35), transparent 60%),
+                  radial-gradient(900px 600px at 95% 10%, rgba(16,185,129,.22), transparent 55%),
+                  radial-gradient(900px 600px at 60% 110%, rgba(56,189,248,.18), transparent 55%),
+                  linear-gradient(180deg, #060812 0%, #070A12 40%, #060815 100%);
+      color: var(--text);
+      overflow-x: hidden;
+    }
+    /* Smooth scrolling */
+    html { scroll-behavior: smooth; }
+    /* Enhanced Animated Grain with Subtle Movement */
+    .grain::before{
+      content:"";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='260' height='260'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='260' height='260' filter='url(%23n)' opacity='.15'/%3E%3C/svg%3E");
+      mix-blend-mode: overlay;
+      opacity: .12;
+      z-index: 0;
+      animation: grain-move 8s linear infinite;
+    }
+    @keyframes grain-move {
+      0% { background-position: 0 0; }
+      100% { background-position: 20px 20px; }
+    }
+    /* Enhanced Glass Surfaces with Inner Glow */
+    .glass{
+      background: linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.05));
+      border: 1px solid var(--stroke);
+      box-shadow: var(--shadow2), inset 0 1px 2px rgba(255,255,255,.12);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+    }
+    .glass-strong{
+      background: linear-gradient(180deg, rgba(255,255,255,.12), rgba(255,255,255,.06));
+      border: 1px solid rgba(255,255,255,.14);
+      box-shadow: var(--shadow), inset 0 1px 3px rgba(255,255,255,.18);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+    }
+    /* Vibrant Gradient Text with Animation */
+    .grad-text{
+      background: linear-gradient(90deg, #a78bfa 0%, #60a5fa 25%, #34d399 60%, #22d3ee 100%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      animation: gradient-shift 4s linear infinite;
+      background-size: 200% 100%;
+    }
+    @keyframes gradient-shift {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+    /* Buttons with Enhanced Hover Effects */
+    .btn-neo{
+      border-radius: 999px;
+      padding: .85rem 1.1rem;
+      font-weight: 700;
+      letter-spacing: .01em;
+      transition: transform .18s ease, box-shadow .18s ease, background .18s ease, border-color .18s ease;
+      will-change: transform, box-shadow;
+    }
+    .btn-primary-neo{
+      background: linear-gradient(135deg, rgba(99,102,241,1) 0%, rgba(34,211,238,1) 100%);
+      border: 1px solid rgba(255,255,255,.12);
+      color: #06101a;
+      box-shadow: 0 18px 45px rgba(34,211,238,.14), 0 18px 55px rgba(99,102,241,.14);
+    }
+    .btn-primary-neo:hover{ transform: translateY(-2px) scale(1.02); box-shadow: 0 22px 65px rgba(34,211,238,.22), 0 22px 80px rgba(99,102,241,.22); }
+    .btn-ghost-neo{
+      background: rgba(255,255,255,.06);
+      border: 1px solid rgba(255,255,255,.14);
+      color: rgba(255,255,255,.9);
+    }
+    .btn-ghost-neo:hover{ transform: translateY(-2px) scale(1.02); background: rgba(255,255,255,.085); box-shadow: 0 8px 20px rgba(255,255,255,.1); }
+    /* Navbar with Subtle Drop Shadow */
+    .navbar{
+      z-index: 50;
+      box-shadow: 0 4px 12px rgba(0,0,0,.25);
+    }
+    .nav-link{
+      color: rgba(255,255,255,.78) !important;
+      font-weight: 600;
+      transition: color .18s ease, transform .18s ease;
+    }
+    .nav-link:hover{
+      color: rgba(255,255,255,.95) !important;
+      transform: translateY(-1px);
+    }
+    .navbar-toggler{
+      border: 1px solid rgba(255,255,255,.16);
+      background: rgba(255,255,255,.06);
+      transition: transform .18s ease;
+    }
+    .navbar-toggler:hover{ transform: scale(1.05); }
+    .navbar-brand .brand-badge{
+      background: linear-gradient(135deg, rgba(99,102,241,.35), rgba(34,211,238,.18));
+      border: 1px solid rgba(255,255,255,.16);
+      animation: badge-pulse 2s infinite;
+    }
+    @keyframes badge-pulse {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+      100% { transform: scale(1); }
+    }
+    /* Hero Enhanced with Parallax Image */
+    .hero{
+      position: relative;
+      z-index: 1;
+      background-attachment: fixed;
+      background-position: center;
+      background-size: cover;
+      background-image: url('https://assets.aboutamazon.com/8c/38/974ab2544e96aefde013478e58cc/about-amazon-hero-aa-dec2024-ai-interview-tools-hero-v1-2000x1125.jpg');
+    }
+    .hero::after{
+      content:"";
+      position:absolute;
+      inset:-60px -60px auto -60px;
+      height: 520px;
+      background: radial-gradient(600px 300px at 50% 30%, rgba(99,102,241,.22), transparent 70%),
+                  radial-gradient(500px 260px at 35% 20%, rgba(34,211,238,.18), transparent 70%),
+                  radial-gradient(520px 280px at 75% 35%, rgba(16,185,129,.12), transparent 70%);
+      pointer-events:none;
+      filter: blur(0px);
+      z-index: -1;
+      animation: glow-shift 6s linear infinite;
+    }
+    @keyframes glow-shift {
+      0% { transform: translate(0, 0); }
+      50% { transform: translate(10px, 10px); }
+      100% { transform: translate(0, 0); }
+    }
+    /* Mock Resume Card with 3D Tilt */
+    .resume-mock{
+      position: relative;
+      overflow: hidden;
+      perspective: 1000px;
+      transition: transform 0.3s ease;
+    }
+    .resume-mock:hover{
+      transform: rotateY(5deg) rotateX(5deg);
+    }
+    .resume-mock::before{
+      content:"";
+      position:absolute;
+      inset:-2px;
+      background: linear-gradient(135deg, rgba(99,102,241,.5), rgba(34,211,238,.35), rgba(16,185,129,.25));
+      opacity: .35;
+      filter: blur(18px);
+      z-index: 0;
+      animation: border-glow 3s linear infinite;
+    }
+    @keyframes border-glow {
+      0% { opacity: 0.35; }
+      50% { opacity: 0.5; }
+      100% { opacity: 0.35; }
+    }
+    .resume-mock .inner{
+      position: relative;
+      z-index: 1;
+      background: rgba(9, 12, 23, .65);
+      border: 1px solid rgba(255,255,255,.12);
+      border-radius: 18px;
+      box-shadow: var(--shadow2);
+      transition: background 0.3s ease;
+    }
+    .resume-mock:hover .inner{ background: rgba(9, 12, 23, .75); }
+    .pill{
+      border: 1px solid rgba(255,255,255,.14);
+      background: rgba(255,255,255,.06);
+      color: rgba(255,255,255,.85);
+      transition: transform 0.2s ease;
+    }
+    .pill:hover{ transform: scale(1.05); }
+    /* Feature Cards with Glow and Scale */
+    .feature-card{
+      transition: transform .18s ease, border-color .18s ease, background .18s ease, box-shadow .18s ease;
+      border: 1px solid rgba(255,255,255,.12);
+      background: linear-gradient(180deg, rgba(255,255,255,.075), rgba(255,255,255,.045));
+    }
+    .feature-card:hover{
+      transform: translateY(-6px) scale(1.02);
+      border-color: rgba(34,211,238,.35);
+      box-shadow: 0 22px 55px rgba(0,0,0,.38), 0 0 20px rgba(34,211,238,.2);
+      background: linear-gradient(180deg, rgba(255,255,255,.095), rgba(255,255,255,.05));
+    }
+    /* Steps with Bounce Hover */
+    .step{
+      border: 1px solid rgba(255,255,255,.12);
+      background: rgba(255,255,255,.06);
+      transition: transform .18s ease, border-color .18s ease, background .18s ease;
+    }
+    .step:hover{ transform: translateY(-4px) scale(1.02); border-color: rgba(167,139,250,.35); background: rgba(255,255,255,.075); box-shadow: 0 10px 25px rgba(167,139,250,.15); }
+    .step .num{
+      width: 42px; height: 42px;
+      display: grid; place-items: center;
+      border-radius: 12px;
+      background: linear-gradient(135deg, rgba(99,102,241,.35), rgba(34,211,238,.2));
+      border: 1px solid rgba(255,255,255,.14);
+      transition: transform 0.3s ease;
+    }
+    .step:hover .num{ transform: rotate(360deg); }
+    /* Template Cards with 3D Flip Hover */
+    .template-card{
+      border: 1px solid rgba(255,255,255,.12);
+      background: rgba(255,255,255,.06);
+      overflow: hidden;
+      transition: transform .18s ease, border-color .18s ease, box-shadow .18s ease;
+      perspective: 1000px;
+    }
+    .template-card:hover{
+      transform: translateY(-6px) rotateY(10deg);
+      border-color: rgba(16,185,129,.35);
+      box-shadow: 0 22px 55px rgba(0,0,0,.38), 0 0 25px rgba(16,185,129,.2);
+    }
+    .template-thumb{
+      height: 220px;
+      background: radial-gradient(500px 220px at 25% 15%, rgba(99,102,241,.25), transparent 55%),
+                  radial-gradient(400px 220px at 85% 35%, rgba(34,211,238,.2), transparent 55%),
+                  linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.02));
+      position: relative;
+      transition: transform 0.3s ease;
+    }
+    .template-card:hover .template-thumb{ transform: scale(1.05); }
+    .thumb-paper{
+      position: absolute;
+      inset: 18px;
+      border-radius: 14px;
+      background: linear-gradient(180deg, rgba(255,255,255,.12), rgba(255,255,255,.06));
+      border: 1px solid rgba(255,255,255,.14);
+      overflow: hidden;
+      transform: translateZ(0);
+      transition: transform .18s ease, box-shadow .18s ease;
+    }
+    .template-card:hover .thumb-paper{
+      transform: scale(1.02) translateZ(20px);
+      box-shadow: 0 10px 20px rgba(0,0,0,.3);
+    }
+    .thumb-lines{
+      position:absolute;
+      inset: 16px;
+      border-radius: 10px;
+      background:
+        linear-gradient(90deg, rgba(255,255,255,.12), rgba(255,255,255,0) 55%),
+        repeating-linear-gradient(180deg, rgba(255,255,255,.14) 0, rgba(255,255,255,.14) 2px, rgba(255,255,255,0) 2px, rgba(255,255,255,0) 14px);
+      opacity: .6;
+      mask-image: linear-gradient(180deg, black 70%, transparent 100%);
+      animation: lines-scroll 2s linear infinite;
+    }
+    @keyframes lines-scroll {
+      0% { transform: translateY(0); }
+      100% { transform: translateY(-14px); }
+    }
+    /* Pricing Cards with Pulse for Featured */
+    .price-card{
+      border: 1px solid rgba(255,255,255,.12);
+      background: linear-gradient(180deg, rgba(255,255,255,.075), rgba(255,255,255,.045));
+      transition: transform .18s ease, box-shadow .18s ease, border-color .18s ease;
+    }
+    .price-card:hover{ transform: translateY(-6px) scale(1.02); box-shadow: 0 22px 55px rgba(0,0,0,.38); }
+    .price-card.featured{
+      border-color: rgba(34,211,238,.35);
+      background: linear-gradient(180deg, rgba(34,211,238,.10), rgba(99,102,241,.05));
+      animation: featured-pulse 2s infinite;
+    }
+    @keyframes featured-pulse {
+      0% { box-shadow: 0 0 0 0 rgba(34,211,238,.4); }
+      70% { box-shadow: 0 0 0 15px rgba(34,211,238,0); }
+      100% { box-shadow: 0 0 0 0 rgba(34,211,238,0); }
+    }
+    /* Testimonials with Slide-in */
+    .quote{
+      border: 1px solid rgba(255,255,255,.12);
+      background: rgba(255,255,255,.06);
+      transition: transform 0.3s ease;
+    }
+    .quote:hover{ transform: translateX(5px); }
+    /* Footer Links with Underline Hover */
+    .footer-link{ color: rgba(255,255,255,.7); text-decoration: none; position: relative; }
+    .footer-link::after {
+      content: '';
+      position: absolute;
+      width: 0;
+      height: 1px;
+      bottom: -2px;
+      left: 0;
+      background-color: rgba(255,255,255,.92);
+      transition: width 0.3s ease;
+    }
+    .footer-link:hover::after { width: 100%; }
+    .footer-link:hover{ color: rgba(255,255,255,.92); }
+    /* Reveal with AOS Integration */
+    [data-aos="fade-up"] { transition: all 0.6s ease; }
+  </style>
+</head>
+<body class="grain">
+  <!-- Top gradient glow bar -->
+  <div class="fixed top-0 left-0 right-0 h-[2px] z-50" style="background:linear-gradient(90deg, rgba(99,102,241,0), rgba(34,211,238,.9), rgba(16,185,129,.8), rgba(99,102,241,0)); opacity:.9"></div>
+  <!-- NAVBAR -->
+  <nav class="navbar navbar-expand-lg sticky-top">
+    <div class="container py-2">
+      <a class="navbar-brand d-flex align-items-center gap-2 text-white fw-bold" href="#home" aria-label="AI Resume Builder">
+        <span class="brand-badge d-inline-grid place-items-center rounded-3 px-2 py-1">
+          <i class="bi bi-stars"></i>
+        </span>
+        <span>AI Resume Builder</span>
+        <span class="d-none d-md-inline-block text-xs px-2 py-1 rounded-pill pill">Production-ready</span>
+      </a>
+      <button class="navbar-toggler text-white" type="button" data-bs-toggle="collapse" data-bs-target="#navMain" aria-controls="navMain" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon" style="filter: invert(1) contrast(1.2);"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navMain">
+        <ul class="navbar-nav ms-auto align-items-lg-center gap-lg-1">
+          <li class="nav-item"><a class="nav-link" href="#home">Home</a></li>
+          <li class="nav-item"><a class="nav-link" href="#features">Features</a></li>
+          <li class="nav-item"><a class="nav-link" href="#templates">Templates</a></li>
+          <li class="nav-item"><a class="nav-link" href="#how">How It Works</a></li>
+          <li class="nav-item"><a class="nav-link" href="#pricing">Pricing</a></li>
+          <li class="nav-item ms-lg-2"><a class="nav-link" href="login.html">Login</a></li>
+          <li class="nav-item ms-lg-1">
+            <a class="btn btn-neo btn-primary-neo px-4" href="register.html">Register</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+    <!-- translucent backdrop for nav -->
+    <div class="position-absolute inset-0 w-100 h-100" style="z-index:-1;background:rgba(6,8,18,.55);backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border-bottom:1px solid rgba(255,255,255,.10);"></div>
+  </nav>
+  <!-- HERO -->
+  <header id="home" class="hero">
+    <div class="container py-5 py-lg-6">
+      <div class="row align-items-center g-4 g-lg-5">
+        <div class="col-lg-6" data-aos="fade-right" data-aos-duration="1200">
+          <div class="reveal">
+            <div class="d-inline-flex align-items-center gap-2 rounded-pill px-3 py-2 glass mb-3">
+              <i class="bi bi-shield-check text-cyan-200"></i>
+              <span class="text-sm" style="color:var(--muted)">Secure login • AI assisted • Export PDF & DOCX</span>
+            </div>
+            <h1 class="display-5 fw-800 lh-1 text-white" style="font-weight: 800;">
+              Build a <span class="grad-text">Professional Resume</span><br class="d-none d-md-block" />
+              in Minutes using AI
+            </h1>
+            <p class="mt-3 fs-5" style="color:var(--muted); max-width: 52ch;">
+              AI automatically generates summary, skills, and experience points — then you can preview, edit, and download instantly.
+            </p>
+            <div class="d-flex flex-column flex-sm-row gap-3 mt-4">
+              <a href="register.html" class="btn btn-neo btn-primary-neo px-5">
+                <i class="bi bi-magic me-2"></i>Create Resume
+              </a>
+              <a href="login.html" class="btn btn-neo btn-ghost-neo px-5">
+                <i class="bi bi-box-arrow-in-right me-2"></i>Login
+              </a>
+            </div>
+            <div class="mt-4 d-flex flex-wrap gap-2">
+              <span class="px-3 py-2 rounded-pill pill text-sm"><i class="bi bi-lightning-charge me-1"></i>Fast AI generation</span>
+              <span class="px-3 py-2 rounded-pill pill text-sm"><i class="bi bi-eye me-1"></i>Live preview</span>
+              <span class="px-3 py-2 rounded-pill pill text-sm"><i class="bi bi-download me-1"></i>One-click export</span>
+            </div>
+            <div class="mt-4" style="color:var(--muted); font-size:.95rem;">
+              <span class="me-2"><i class="bi bi-check2-circle me-1"></i>Free plan available</span>
+              <span class="me-2"><i class="bi bi-check2-circle me-1"></i>No design skills needed</span>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-6" data-aos="fade-left" data-aos-duration="1200">
+          <div class="reveal">
+            <img src="https://imageio.forbes.com/specials-images/imageserve/68f64b49abb061aa6b826a20/0x0.jpg?format=jpg&height=900&width=1600&fit=bounds" alt="Person using AI resume builder" class="img-fluid rounded-4 mb-4 shadow-lg" style="object-fit: cover; height: 400px; width: 100%;">
+            <div class="resume-mock rounded-4 p-3 p-sm-4 glass-strong">
+              <div class="inner p-3 p-sm-4">
+                <div class="d-flex align-items-center justify-content-between">
+                  <div>
+                    <div class="fw-bold text-white">Preview</div>
+                    <div class="text-sm" style="color:var(--muted)">AI-generated resume (editable)</div>
+                  </div>
+                  <div class="d-flex gap-2">
+                    <button class="btn btn-neo btn-ghost-neo py-2 px-3" type="button" id="regenBtn" title="Regenerate">
+                      <i class="bi bi-arrow-repeat"></i>
+                    </button>
+                    <button class="btn btn-neo btn-ghost-neo py-2 px-3" type="button" id="downloadBtn" title="Download">
+                      <i class="bi bi-download"></i>
+                    </button>
+                  </div>
+                </div>
+                <div class="mt-3 p-3 rounded-4" style="border:1px solid rgba(255,255,255,.12); background: rgba(255,255,255,.05);">
+                  <div class="d-flex align-items-center justify-content-between gap-3 flex-wrap">
+                    <div>
+                      <div class="h5 mb-0 text-white" id="mockName">Arun Kumar</div>
+                      <div class="text-sm" style="color:var(--muted)" id="mockTitle">Full-Stack Developer</div>
+                    </div>
+                    <div class="d-flex flex-wrap gap-2 text-sm" style="color:var(--muted)">
+                      <span class="px-2 py-1 rounded-pill pill"><i class="bi bi-geo-alt me-1"></i>Chennai</span>
+                      <span class="px-2 py-1 rounded-pill pill"><i class="bi bi-envelope me-1"></i>arun@email.com</span>
+                    </div>
+                  </div>
+                  <hr style="border-color: rgba(255,255,255,.12)" />
+                  <div class="text-sm fw-semibold text-white mb-2"><i class="bi bi-stars me-2"></i>Professional Summary</div>
+                  <p class="text-sm mb-3" style="color:var(--muted)" id="mockSummary">
+                    Results-driven developer with experience building responsive web apps, secure authentication flows, and scalable APIs. Focused on clean UI and production-ready delivery.
+                  </p>
+                  <div class="row g-3">
+                    <div class="col-md-6">
+                      <div class="text-sm fw-semibold text-white mb-2"><i class="bi bi-lightning-charge me-2"></i>Key Skills</div>
+                      <div class="d-flex flex-wrap gap-2" id="mockSkills">
+                        <span class="px-2 py-1 rounded-pill pill text-sm">React</span>
+                        <span class="px-2 py-1 rounded-pill pill text-sm">Node</span>
+                        <span class="px-2 py-1 rounded-pill pill text-sm">SQL</span>
+                        <span class="px-2 py-1 rounded-pill pill text-sm">UI/UX</span>
+                      </div>
+                    </div>
+                    <div class="col-md-6">
+                      <div class="text-sm fw-semibold text-white mb-2"><i class="bi bi-briefcase me-2"></i>Experience</div>
+                      <ul class="text-sm mb-0" style="color:var(--muted)" id="mockExp">
+                        <li>Designed AI-assisted resume workflows with live preview.</li>
+                        <li>Implemented secure login and role-based access.</li>
+                        <li>Optimized performance for mobile-first UX.</li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+                <div class="mt-3 d-flex align-items-center justify-content-between flex-wrap gap-2">
+                  <div class="text-sm" style="color:var(--muted)">
+                    <i class="bi bi-lock me-1"></i>Your data is protected with secure authentication.
+                  </div>
+                  <div class="text-sm fw-semibold grad-text" id="aiStatus">AI Ready</div>
+                </div>
+              </div>
+            </div>
+            <div class="mt-3 text-sm" style="color:var(--muted)">
+              Tip: Click <span class="text-white fw-semibold">Regenerate</span> to see AI content changes.
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+  <!-- LOGOS / TRUST STRIP -->
+  <section class="py-4" data-aos="fade-up" data-aos-duration="1000">
+    <div class="container reveal">
+      <div class="glass rounded-4 px-3 py-3 px-md-4 d-flex flex-column flex-md-row align-items-md-center justify-content-between gap-3">
+        <div class="d-flex align-items-center gap-2">
+          <i class="bi bi-award text-cyan-200"></i>
+          <div class="fw-semibold text-white">Trusted for professional-quality resumes</div>
+        </div>
+        <div class="d-flex flex-wrap gap-2">
+          <span class="px-3 py-2 rounded-pill pill text-sm"><i class="bi bi-file-earmark-pdf me-1"></i>PDF</span>
+          <span class="px-3 py-2 rounded-pill pill text-sm"><i class="bi bi-file-earmark-word me-1"></i>DOCX</span>
+          <span class="px-3 py-2 rounded-pill pill text-sm"><i class="bi bi-sliders me-1"></i>Customization</span>
+          <span class="px-3 py-2 rounded-pill pill text-sm"><i class="bi bi-person-check me-1"></i>Secure Access</span>
+        </div>
+      </div>
+    </div>
+  </section>
+  <!-- FEATURES -->
+  <section id="features" class="py-5 py-lg-6" data-aos="fade-up" data-aos-duration="1000">
+    <div class="container">
+      <div class="row align-items-end g-3 mb-4">
+        <div class="col-lg-7 reveal">
+          <h2 class="h1 text-white fw-800 mb-2" style="font-weight: 800;">Everything you need to build a job-ready resume</h2>
+          <p class="mb-0" style="color:var(--muted)">Based on the system flow: AI builder + templates + preview + secure user access + export downloads.</p>
+        </div>
+        <div class="col-lg-5 text-lg-end reveal">
+          <a class="btn btn-neo btn-ghost-neo px-4" href="#how">
+            See the user flow <i class="bi bi-arrow-right ms-2"></i>
+          </a>
+        </div>
+      </div>
+      <div class="row g-3 g-lg-4">
+        <div class="col-md-6 col-lg-4 reveal" data-aos="zoom-in" data-aos-delay="100">
+          <div class="feature-card rounded-4 p-4 h-100">
+            <div class="d-flex align-items-center justify-content-between">
+              <div class="d-inline-grid place-items-center rounded-3 p-2" style="background:rgba(99,102,241,.22); border:1px solid rgba(255,255,255,.12)">
+                <i class="bi bi-robot fs-4 text-white"></i>
+              </div>
+              <span class="px-3 py-2 rounded-pill pill text-sm">AI</span>
+            </div>
+            <h3 class="h5 text-white mt-3 mb-2">AI Resume Generator</h3>
+            <p class="mb-0" style="color:var(--muted)">Generate summary, skills, and bullet points that sound professional and ATS-friendly.</p>
+          </div>
+        </div>
+        <div class="col-md-6 col-lg-4 reveal" data-aos="zoom-in" data-aos-delay="200">
+          <div class="feature-card rounded-4 p-4 h-100">
+            <div class="d-flex align-items-center justify-content-between">
+              <div class="d-inline-grid place-items-center rounded-3 p-2" style="background:rgba(34,211,238,.18); border:1px solid rgba(255,255,255,.12)">
+                <i class="bi bi-grid-1x2 fs-4 text-white"></i>
+              </div>
+              <span class="px-3 py-2 rounded-pill pill text-sm">Templates</span>
+            </div>
+            <h3 class="h5 text-white mt-3 mb-2">Multiple Resume Templates</h3>
+            <p class="mb-0" style="color:var(--muted)">Choose modern, professional layouts. Only active templates are shown (admin-managed).</p>
+          </div>
+        </div>
+        <div class="col-md-6 col-lg-4 reveal" data-aos="zoom-in" data-aos-delay="300">
+          <div class="feature-card rounded-4 p-4 h-100">
+            <div class="d-flex align-items-center justify-content-between">
+              <div class="d-inline-grid place-items-center rounded-3 p-2" style="background:rgba(16,185,129,.18); border:1px solid rgba(255,255,255,.12)">
+                <i class="bi bi-eye fs-4 text-white"></i>
+              </div>
+              <span class="px-3 py-2 rounded-pill pill text-sm">Live</span>
+            </div>
+            <h3 class="h5 text-white mt-3 mb-2">Live Preview & Customization</h3>
+            <p class="mb-0" style="color:var(--muted)">See changes instantly. Edit AI output or manually tweak sections anytime.</p>
+          </div>
+        </div>
+        <div class="col-md-6 col-lg-4 reveal" data-aos="zoom-in" data-aos-delay="400">
+          <div class="feature-card rounded-4 p-4 h-100">
+            <div class="d-flex align-items-center justify-content-between">
+              <div class="d-inline-grid place-items-center rounded-3 p-2" style="background:rgba(255,255,255,.10); border:1px solid rgba(255,255,255,.12)">
+                <i class="bi bi-file-earmark-arrow-down fs-4 text-white"></i>
+              </div>
+              <span class="px-3 py-2 rounded-pill pill text-sm">Export</span>
+            </div>
+            <h3 class="h5 text-white mt-3 mb-2">PDF & DOCX Download</h3>
+            <p class="mb-0" style="color:var(--muted)">One-click export for quick applications. Download your resume in standard formats.</p>
+          </div>
+        </div>
+        <div class="col-md-6 col-lg-4 reveal" data-aos="zoom-in" data-aos-delay="500">
+          <div class="feature-card rounded-4 p-4 h-100">
+            <div class="d-flex align-items-center justify-content-between">
+              <div class="d-inline-grid place-items-center rounded-3 p-2" style="background:rgba(167,139,250,.18); border:1px solid rgba(255,255,255,.12)">
+                <i class="bi bi-upload fs-4 text-white"></i>
+              </div>
+              <span class="px-3 py-2 rounded-pill pill text-sm">Upload</span>
+            </div>
+            <h3 class="h5 text-white mt-3 mb-2">Manual Resume Upload</h3>
+            <p class="mb-0" style="color:var(--muted)">Upload existing resumes and enhance them with AI suggestions and better formatting.</p>
+          </div>
+        </div>
+        <div class="col-md-6 col-lg-4 reveal" data-aos="zoom-in" data-aos-delay="600">
+          <div class="feature-card rounded-4 p-4 h-100">
+            <div class="d-flex align-items-center justify-content-between">
+              <div class="d-inline-grid place-items-center rounded-3 p-2" style="background:rgba(252,211,77,.12); border:1px solid rgba(255,255,255,.12)">
+                <i class="bi bi-shield-lock fs-4 text-white"></i>
+              </div>
+              <span class="px-3 py-2 rounded-pill pill text-sm">Secure</span>
+            </div>
+            <h3 class="h5 text-white mt-3 mb-2">Secure Login System</h3>
+            <p class="mb-0" style="color:var(--muted)">Keep user data protected with authentication and privacy-focused design.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <!-- HOW IT WORKS -->
+  <section id="how" class="py-5 py-lg-6" data-aos="fade-up" data-aos-duration="1000">
+    <div class="container">
+      <div class="row g-3 align-items-center mb-4">
+        <div class="col-lg-8 reveal">
+          <h2 class="h1 text-white fw-800 mb-2" style="font-weight: 800;">How it works</h2>
+          <p class="mb-0" style="color:var(--muted)">Home → Login → Dashboard → AI Builder → Template → Preview → Download</p>
+        </div>
+        <div class="col-lg-4 text-lg-end reveal">
+          <a class="btn btn-neo btn-ghost-neo px-4" href="#templates">
+            Explore templates <i class="bi bi-arrow-right ms-2"></i>
+          </a>
+        </div>
+      </div>
+      <div class="row g-3 g-lg-4">
+        <div class="col-md-6 col-lg-4 reveal" data-aos="slide-up" data-aos-delay="100">
+          <div class="step rounded-4 p-4 h-100">
+            <div class="d-flex align-items-center gap-3">
+              <div class="num">1</div>
+              <div>
+                <div class="text-white fw-bold">Signup / Login</div>
+                <div class="text-sm" style="color:var(--muted)">Create your account securely to access the dashboard.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6 col-lg-4 reveal" data-aos="slide-up" data-aos-delay="200">
+          <div class="step rounded-4 p-4 h-100">
+            <div class="d-flex align-items-center gap-3">
+              <div class="num">2</div>
+              <div>
+                <div class="text-white fw-bold">Choose Resume Option</div>
+                <div class="text-sm" style="color:var(--muted)">Manual upload, AI generate, or select a template first.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6 col-lg-4 reveal" data-aos="slide-up" data-aos-delay="300">
+          <div class="step rounded-4 p-4 h-100">
+            <div class="d-flex align-items-center gap-3">
+              <div class="num">3</div>
+              <div>
+                <div class="text-white fw-bold">AI Generates Content</div>
+                <div class="text-sm" style="color:var(--muted)">Summary, skills, and experience bullets are drafted automatically.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6 col-lg-4 reveal" data-aos="slide-up" data-aos-delay="400">
+          <div class="step rounded-4 p-4 h-100">
+            <div class="d-flex align-items-center gap-3">
+              <div class="num">4</div>
+              <div>
+                <div class="text-white fw-bold">Preview & Customize</div>
+                <div class="text-sm" style="color:var(--muted)">Live preview lets you edit, reorder, and refine content quickly.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6 col-lg-4 reveal" data-aos="slide-up" data-aos-delay="500">
+          <div class="step rounded-4 p-4 h-100">
+            <div class="d-flex align-items-center gap-3">
+              <div class="num">5</div>
+              <div>
+                <div class="text-white fw-bold">Download PDF / DOCX</div>
+                <div class="text-sm" style="color:var(--muted)">Export in standard formats for job applications.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6 col-lg-4 reveal" data-aos="slide-up" data-aos-delay="600">
+          <div class="step rounded-4 p-4 h-100">
+            <div class="d-flex align-items-center gap-3">
+              <div class="num"><i class="bi bi-check2"></i></div>
+              <div>
+                <div class="text-white fw-bold">Apply Faster</div>
+                <div class="text-sm" style="color:var(--muted)">Save versions, reuse templates, and iterate with AI.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <!-- TEMPLATES -->
+  <section id="templates" class="py-5 py-lg-6" data-aos="fade-up" data-aos-duration="1000">
+    <div class="container">
+      <div class="row g-3 align-items-end mb-4">
+        <div class="col-lg-8 reveal">
+          <h2 class="h1 text-white fw-800 mb-2" style="font-weight: 800;">Resume templates preview</h2>
+          <p class="mb-0" style="color:var(--muted)">Modern layouts that look great on desktop and mobile. (Admin can add/activate templates.)</p>
+        </div>
+        <div class="col-lg-4 text-lg-end reveal">
+          <a href="#pricing" class="btn btn-neo btn-ghost-neo px-4">
+            View pricing <i class="bi bi-arrow-right ms-2"></i>
+          </a>
+        </div>
+      </div>
+      <div class="row g-3 g-lg-4">
+        <div class="col-md-6 col-lg-4 reveal" data-aos="flip-left" data-aos-delay="100">
+          <div class="template-card rounded-4 h-100">
+            <div class="template-thumb">
+              <div class="thumb-paper">
+                <div class="thumb-lines"></div>
+              </div>
+              <div class="position-absolute top-0 start-0 m-3 px-3 py-2 rounded-pill pill text-sm">
+                <i class="bi bi-briefcase me-1"></i>Professional
+              </div>
+            </div>
+            <div class="p-4">
+              <div class="text-white fw-bold">Professional</div>
+              <div class="text-sm mt-1" style="color:var(--muted)">Clean structure, ideal for corporate roles and ATS.</div>
+              <div class="mt-3 d-flex gap-2">
+                <button class="btn btn-neo btn-ghost-neo px-4 py-2" type="button" data-template="Professional">
+                  Preview
+                </button>
+                <button class="btn btn-neo btn-primary-neo px-4 py-2" type="button" data-use-template="Professional">
+                  Use
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6 col-lg-4 reveal" data-aos="flip-left" data-aos-delay="200">
+          <div class="template-card rounded-4 h-100">
+            <div class="template-thumb" style="background:
+              radial-gradient(500px 220px at 25% 15%, rgba(16,185,129,.22), transparent 55%),
+              radial-gradient(400px 220px at 85% 35%, rgba(34,211,238,.20), transparent 55%),
+              linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.02));">
+              <div class="thumb-paper">
+                <div class="thumb-lines"></div>
+              </div>
+              <div class="position-absolute top-0 start-0 m-3 px-3 py-2 rounded-pill pill text-sm">
+                <i class="bi bi-lightning-charge me-1"></i>Modern
+              </div>
+            </div>
+            <div class="p-4">
+              <div class="text-white fw-bold">Modern</div>
+              <div class="text-sm mt-1" style="color:var(--muted)">Bold sections, great for tech and creative profiles.</div>
+              <div class="mt-3 d-flex gap-2">
+                <button class="btn btn-neo btn-ghost-neo px-4 py-2" type="button" data-template="Modern">
+                  Preview
+                </button>
+                <button class="btn btn-neo btn-primary-neo px-4 py-2" type="button" data-use-template="Modern">
+                  Use
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6 col-lg-4 reveal" data-aos="flip-left" data-aos-delay="300">
+          <div class="template-card rounded-4 h-100">
+            <div class="template-thumb" style="background:
+              radial-gradient(500px 220px at 25% 15%, rgba(167,139,250,.22), transparent 55%),
+              radial-gradient(400px 220px at 85% 35%, rgba(99,102,241,.18), transparent 55%),
+              linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.02));">
+              <div class="thumb-paper">
+                <div class="thumb-lines"></div>
+              </div>
+              <div class="position-absolute top-0 start-0 m-3 px-3 py-2 rounded-pill pill text-sm">
+                <i class="bi bi-layout-text-sidebar-reverse me-1"></i>Simple
+              </div>
+            </div>
+            <div class="p-4">
+              <div class="text-white fw-bold">Simple</div>
+              <div class="text-sm mt-1" style="color:var(--muted)">Minimal design for quick reading and clarity.</div>
+              <div class="mt-3 d-flex gap-2">
+                <button class="btn btn-neo btn-ghost-neo px-4 py-2" type="button" data-template="Simple">
+                  Preview
+                </button>
+                <button class="btn btn-neo btn-primary-neo px-4 py-2" type="button" data-use-template="Simple">
+                  Use
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <!-- AI POWER -->
+  <section id="ai" class="py-5 py-lg-6" data-aos="fade-up" data-aos-duration="1000">
+    <div class="container">
+      <div class="row g-4 align-items-center">
+        <div class="col-lg-6 reveal" data-aos="fade-left" data-aos-delay="200">
+          <div class="glass-strong rounded-4 p-4 p-lg-5">
+            <div class="d-flex align-items-center justify-content-between flex-wrap gap-2">
+              <div>
+                <h2 class="h1 text-white fw-800 mb-2" style="font-weight: 800;">Powered by AI</h2>
+                <p class="mb-0" style="color:var(--muted)">Generate and refine resume content that sounds confident and professional.</p>
+              </div>
+              <span class="px-3 py-2 rounded-pill pill text-sm"><i class="bi bi-stars me-1"></i>Editable output</span>
+            </div>
+            <div class="row g-3 mt-3">
+              <div class="col-md-4">
+                <div class="p-3 rounded-4" style="border:1px solid rgba(255,255,255,.12); background: rgba(255,255,255,.05);">
+                  <div class="text-sm" style="color:var(--muted)">Summaries generated</div>
+                  <div class="display-6 text-white fw-800" style="font-weight:800" data-counter="12840">0</div>
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="p-3 rounded-4" style="border:1px solid rgba(255,255,255,.12); background: rgba(255,255,255,.05);">
+                  <div class="text-sm" style="color:var(--muted)">Skills suggested</div>
+                  <div class="display-6 text-white fw-800" style="font-weight:800" data-counter="68420">0</div>
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="p-3 rounded-4" style="border:1px solid rgba(255,255,255,.12); background: rgba(255,255,255,.05);">
+                  <div class="text-sm" style="color:var(--muted)">Resumes exported</div>
+                  <div class="display-6 text-white fw-800" style="font-weight:800" data-counter="23110">0</div>
+                </div>
+              </div>
+            </div>
+            <div class="mt-3 d-flex flex-wrap gap-2">
+              <span class="px-3 py-2 rounded-pill pill text-sm"><i class="bi bi-pencil-square me-1"></i>Edit</span>
+              <span class="px-3 py-2 rounded-pill pill text-sm"><i class="bi bi-arrow-repeat me-1"></i>Regenerate</span>
+              <span class="px-3 py-2 rounded-pill pill text-sm"><i class="bi bi-check2-square me-1"></i>Preview</span>
+              <span class="px-3 py-2 rounded-pill pill text-sm"><i class="bi bi-cloud-download me-1"></i>Download</span>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-6 reveal" data-aos="fade-right" data-aos-delay="300">
+          <div class="glass rounded-4 p-4 p-lg-5">
+            <div class="d-flex align-items-start gap-3">
+              <div class="d-inline-grid place-items-center rounded-3 p-2" style="background:rgba(34,211,238,.18); border:1px solid rgba(255,255,255,.12)">
+                <i class="bi bi-cpu fs-4 text-white"></i>
+              </div>
+              <div>
+                <div class="h4 text-white mb-2">AI content you can control</div>
+                <p class="mb-3" style="color:var(--muted)">
+                  Generate <span class="text-white fw-semibold">Professional Summary</span>, <span class="text-white fw-semibold">Skills</span>, and <span class="text-white fw-semibold">Experience points</span>.
+                  You can edit manually or regenerate until it matches your profile.
+                </p>
+              </div>
+            </div>
+            <div class="row g-3">
+              <div class="col-md-6">
+                <div class="p-3 rounded-4" style="border:1px solid rgba(255,255,255,.12); background: rgba(255,255,255,.05);">
+                  <div class="text-white fw-semibold"><i class="bi bi-sliders2 me-2"></i>Customization</div>
+                  <div class="text-sm mt-1" style="color:var(--muted)">Change wording, sections, and structure anytime.</div>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="p-3 rounded-4" style="border:1px solid rgba(255,255,255,.12); background: rgba(255,255,255,.05);">
+                  <div class="text-white fw-semibold"><i class="bi bi-shield-lock me-2"></i>Secure by design</div>
+                  <div class="text-sm mt-1" style="color:var(--muted)">Authentication and protected user flow.</div>
+                </div>
+              </div>
+            </div>
+            <div class="mt-4 d-flex flex-column flex-sm-row gap-3">
+              <button class="btn btn-neo btn-primary-neo px-5" id="startNowBtn" type="button">
+                Start Now
+              </button>
+              <button class="btn btn-neo btn-ghost-neo px-5" id="openFeedbackBtn" type="button">
+                Send Feedback
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <!-- PRICING -->
+  <section id="pricing" class="py-5 py-lg-6" data-aos="fade-up" data-aos-duration="1000">
+    <div class="container">
+      <div class="row g-3 align-items-end mb-4">
+        <div class="col-lg-8 reveal">
+          <h2 class="h1 text-white fw-800 mb-2" style="font-weight: 800;">Pricing</h2>
+          <p class="mb-0" style="color:var(--muted)">Free to get started. Upgrade to unlock premium templates and unlimited exports.</p>
+        </div>
+        <div class="col-lg-4 text-lg-end reveal">
+          <button class="btn btn-neo btn-ghost-neo px-4" type="button" data-bs-toggle="modal" data-bs-target="#paymentModal">
+            Upgrade (Demo) <i class="bi bi-credit-card ms-2"></i>
+          </button>
+        </div>
+      </div>
+      <div class="row g-3 g-lg-4">
+        <div class="col-lg-6 reveal" data-aos="zoom-in" data-aos-delay="100">
+          <div class="price-card rounded-4 p-4 p-lg-5 h-100">
+            <div class="d-flex align-items-center justify-content-between gap-2">
+              <div>
+                <div class="text-white fw-bold h4 mb-1">Free</div>
+                <div class="text-sm" style="color:var(--muted)">For students and quick resumes</div>
+              </div>
+              <span class="px-3 py-2 rounded-pill pill text-sm"><i class="bi bi-unlock me-1"></i>Included</span>
+            </div>
+            <div class="mt-3 display-6 text-white fw-800" style="font-weight:800;">₹0 <span class="fs-6" style="color:var(--muted)">/ forever</span></div>
+            <ul class="mt-3 mb-0" style="color:var(--muted)">
+              <li>AI resume generation (basic)</li>
+              <li>Standard templates</li>
+              <li>Live preview + edits</li>
+              <li>Limited exports</li>
+            </ul>
+            <div class="mt-4">
+              <button class="btn btn-neo btn-ghost-neo px-5" type="button" id="chooseFreeBtn">
+                Continue Free
+              </button>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-6 reveal" data-aos="zoom-in" data-aos-delay="200">
+          <div class="price-card featured rounded-4 p-4 p-lg-5 h-100 position-relative overflow-hidden">
+            <div class="position-absolute top-0 end-0 m-3 px-3 py-2 rounded-pill" style="background: rgba(34,211,238,.14); border:1px solid rgba(34,211,238,.25); color: rgba(255,255,255,.88);">
+              Recommended
+            </div>
+            <div class="d-flex align-items-center justify-content-between gap-2">
+              <div>
+                <div class="text-white fw-bold h4 mb-1">Premium</div>
+                <div class="text-sm" style="color:var(--muted)">For frequent applications & best templates</div>
+              </div>
+              <span class="px-3 py-2 rounded-pill pill text-sm"><i class="bi bi-gem me-1"></i>Pro</span>
+            </div>
+            <div class="mt-3 display-6 text-white fw-800" style="font-weight:800;">₹199 <span class="fs-6" style="color:var(--muted)">/ month</span></div>
+            <ul class="mt-3 mb-0" style="color:var(--muted)">
+              <li>Premium templates unlocked</li>
+              <li>Unlimited exports (PDF/DOCX)</li>
+              <li>Advanced AI regeneration</li>
+              <li>Priority support</li>
+            </ul>
+            <div class="mt-4 d-flex flex-column flex-sm-row gap-3">
+              <button class="btn btn-neo btn-primary-neo px-5" type="button" data-bs-toggle="modal" data-bs-target="#paymentModal">
+                Upgrade Now
+              </button>
+              <button class="btn btn-neo btn-ghost-neo px-5" type="button" id="compareBtn">
+                Compare
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <!-- TESTIMONIALS / TRUST -->
+  <section id="testimonials" class="py-5 py-lg-6" data-aos="fade-up" data-aos-duration="1000">
+    <div class="container">
+      <div class="row g-3 align-items-end mb-4">
+        <div class="col-lg-8 reveal">
+          <h2 class="h1 text-white fw-800 mb-2" style="font-weight: 800;">What users say</h2>
+          <p class="mb-0" style="color:var(--muted)">Feedback can be collected and managed in the admin panel (feedback management flow).</p>
+        </div>
+        <div class="col-lg-4 text-lg-end reveal">
+          <button class="btn btn-neo btn-ghost-neo px-4" type="button" data-bs-toggle="modal" data-bs-target="#feedbackModal">
+            Write a review <i class="bi bi-chat-left-text ms-2"></i>
+          </button>
+        </div>
+      </div>
+      <div class="row g-3 g-lg-4">
+        <div class="col-md-6 col-lg-4 reveal" data-aos="flip-up" data-aos-delay="100">
+          <div class="quote rounded-4 p-4 h-100">
+            <div class="d-flex align-items-center justify-content-between">
+              <div class="text-white fw-bold">Karthik</div>
+              <div class="text-sm" style="color:var(--muted)"><i class="bi bi-star-fill text-warning"></i> 4.9</div>
+            </div>
+            <p class="mt-3 mb-0" style="color:var(--muted)">“AI summary and experience points saved a lot of time. The preview + export is super clean.”</p>
+          </div>
+        </div>
+        <div class="col-md-6 col-lg-4 reveal" data-aos="flip-up" data-aos-delay="200">
+          <div class="quote rounded-4 p-4 h-100">
+            <div class="d-flex align-items-center justify-content-between">
+              <div class="text-white fw-bold">Nithya</div>
+              <div class="text-sm" style="color:var(--muted)"><i class="bi bi-star-fill text-warning"></i> 4.8</div>
+            </div>
+            <p class="mt-3 mb-0" style="color:var(--muted)">“Templates look professional. I edited the AI output and downloaded PDF within minutes.”</p>
+          </div>
+        </div>
+        <div class="col-md-6 col-lg-4 reveal" data-aos="flip-up" data-aos-delay="300">
+          <div class="quote rounded-4 p-4 h-100">
+            <div class="d-flex align-items-center justify-content-between">
+              <div class="text-white fw-bold">Suresh</div>
+              <div class="text-sm" style="color:var(--muted)"><i class="bi bi-star-fill text-warning"></i> 5.0</div>
+            </div>
+            <p class="mt-3 mb-0" style="color:var(--muted)">“Login flow is smooth. Premium templates are worth it if you apply often.”</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <!-- FINAL CTA -->
+  <section class="py-5 py-lg-6" data-aos="fade-up" data-aos-duration="1000">
+    <div class="container reveal">
+      <div class="glass-strong rounded-4 p-4 p-lg-5 position-relative overflow-hidden">
+        <div class="position-absolute top-0 end-0" style="width: 420px; height: 420px; background: radial-gradient(circle at 30% 30%, rgba(34,211,238,.22), transparent 60%), radial-gradient(circle at 70% 70%, rgba(99,102,241,.18), transparent 60%); filter: blur(0px); opacity:.9;"></div>
+        <div class="row align-items-center g-4 position-relative" style="z-index:1;">
+          <div class="col-lg-8">
+            <h2 class="h1 text-white fw-800 mb-2" style="font-weight: 800;">Ready to build your resume?</h2>
+            <p class="mb-0 fs-5" style="color:var(--muted)">Start with AI, choose a template, preview, then export. Simple, fast, professional.</p>
+          </div>
+          <div class="col-lg-4 text-lg-end">
+            <div class="d-flex flex-column flex-sm-row flex-lg-column gap-3 justify-content-lg-end">
+              <button class="btn btn-neo btn-primary-neo px-5" id="finalCtaBtn" type="button">
+                Create Resume
+              </button>
+              <button class="btn btn-neo btn-ghost-neo px-5" id="finalLoginBtn" type="button">
+                Login
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <!-- FOOTER -->
+  <footer class="py-5">
+    <div class="container">
+      <div class="row g-4 align-items-start">
+        <div class="col-lg-5">
+          <div class="d-flex align-items-center gap-2 mb-2">
+            <span class="brand-badge d-inline-grid place-items-center rounded-3 px-2 py-1">
+              <i class="bi bi-stars"></i>
+            </span>
+            <span class="text-white fw-bold">AI Resume Builder</span>
+          </div>
+          <p class="mb-3" style="color:var(--muted); max-width: 60ch;">
+            A modern landing page that introduces AI Resume Building Software, explains features, user flow, templates, and guides users to login/signup.
+          </p>
+          <div class="d-flex flex-wrap gap-2">
+            <span class="px-3 py-2 rounded-pill pill text-sm"><i class="bi bi-bootstrap me-1"></i>Bootstrap</span>
+            <span class="px-3 py-2 rounded-pill pill text-sm"><i class="bi bi-code-slash me-1"></i>Tailwind</span>
+            <span class="px-3 py-2 rounded-pill pill text-sm"><i class="bi bi-lightning me-1"></i>JS</span>
+          </div>
+        </div>
+        <div class="col-6 col-lg-2">
+          <div class="text-white fw-semibold mb-2">Product</div>
+          <div class="d-grid gap-2">
+            <a class="footer-link" href="#features">Features</a>
+            <a class="footer-link" href="#templates">Templates</a>
+            <a class="footer-link" href="#how">How it works</a>
+            <a class="footer-link" href="#pricing">Pricing</a>
+          </div>
+        </div>
+        <div class="col-6 col-lg-2">
+          <div class="text-white fw-semibold mb-2">Account</div>
+          <div class="d-grid gap-2">
+            <a class="footer-link" href="login.html">Login</a>
+            <a class="footer-link" href="register.html">Register</a>
+            <a class="footer-link" href="#" id="footerDashboard">Dashboard</a>
+          </div>
+        </div>
+        <div class="col-lg-3">
+          <div class="text-white fw-semibold mb-2">Newsletter</div>
+          <form class="glass rounded-4 p-3" id="newsletterForm">
+            <label class="text-sm mb-2" style="color:var(--muted)" for="newsEmail">Get updates</label>
+            <div class="d-flex gap-2">
+              <input id="newsEmail" type="email" class="form-control bg-transparent text-white" placeholder="you@example.com"
+                style="border:1px solid rgba(255,255,255,.16);"/>
+              <button class="btn btn-neo btn-primary-neo py-2 px-4" type="submit">Join</button>
+            </div>
+            <div class="text-sm mt-2" style="color:var(--muted)" id="newsMsg">No spam. Unsubscribe anytime.</div>
+          </form>
+        </div>
+      </div>
+      <hr class="my-4" style="border-color: rgba(255,255,255,.10)" />
+      <div class="d-flex flex-column flex-md-row align-items-md-center justify-content-between gap-2" style="color:var(--muted)">
+        <div>© <span id="year"></span> AI Resume Builder. All rights reserved.</div>
+        <div class="d-flex gap-3">
+          <a class="footer-link" href="#" data-bs-toggle="modal" data-bs-target="#policyModal">Privacy</a>
+          <a class="footer-link" href="#" data-bs-toggle="modal" data-bs-target="#policyModal">Terms</a>
+          <a class="footer-link" href="#" id="contactBtn">Contact</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+  <!-- TEMPLATE PREVIEW MODAL -->
+  <div class="modal fade" id="templateModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+      <div class="modal-content" style="background: rgba(8,10,18,.85); border: 1px solid rgba(255,255,255,.14); backdrop-filter: blur(14px);">
+        <div class="modal-header" style="border-bottom:1px solid rgba(255,255,255,.10);">
+          <h5 class="modal-title text-white fw-bold" id="templateModalTitle">Template Preview</h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <div class="rounded-4 p-3" style="border:1px solid rgba(255,255,255,.12); background: rgba(255,255,255,.05);">
+            <div class="d-flex align-items-center justify-content-between flex-wrap gap-2">
+              <div>
+                <div class="text-white fw-bold" id="tplName">Professional</div>
+                <div class="text-sm" style="color:var(--muted)">Preview layout (placeholder)</div>
+              </div>
+              <span class="px-3 py-2 rounded-pill pill text-sm" id="tplBadge"><i class="bi bi-grid-1x2 me-1"></i>Template</span>
+            </div>
+            <div class="mt-3 rounded-4" style="height: 320px; background:
+              radial-gradient(700px 260px at 20% 10%, rgba(99,102,241,.20), transparent 60%),
+              radial-gradient(600px 280px at 85% 35%, rgba(34,211,238,.16), transparent 60%),
+              linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.02));
+              border:1px solid rgba(255,255,255,.10);
+              position: relative; overflow:hidden;">
+              <div class="position-absolute inset-0 p-4" style="opacity:.8">
+                <div class="rounded-3 mb-3" style="height:18px; width: 55%; background: rgba(255,255,255,.18)"></div>
+                <div class="rounded-3 mb-2" style="height:12px; width: 35%; background: rgba(255,255,255,.12)"></div>
+                <div class="rounded-3 mb-4" style="height:10px; width: 70%; background: rgba(255,255,255,.10)"></div>
+                <div class="row g-3">
+                  <div class="col-6">
+                    <div class="rounded-3 mb-2" style="height:12px; width: 45%; background: rgba(255,255,255,.14)"></div>
+                    <div class="rounded-3 mb-2" style="height:10px; width: 90%; background: rgba(255,255,255,.09)"></div>
+                    <div class="rounded-3 mb-2" style="height:10px; width: 80%; background: rgba(255,255,255,.09)"></div>
+                    <div class="rounded-3 mb-2" style="height:10px; width: 85%; background: rgba(255,255,255,.09)"></div>
+                  </div>
+                  <div class="col-6">
+                    <div class="rounded-3 mb-2" style="height:12px; width: 50%; background: rgba(255,255,255,.14)"></div>
+                    <div class="rounded-3 mb-2" style="height:10px; width: 92%; background: rgba(255,255,255,.09)"></div>
+                    <div class="rounded-3 mb-2" style="height:10px; width: 88%; background: rgba(255,255,255,.09)"></div>
+                    <div class="rounded-3 mb-2" style="height:10px; width: 86%; background: rgba(255,255,255,.09)"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="mt-3 d-flex flex-column flex-sm-row gap-2 justify-content-end">
+              <button class="btn btn-neo btn-ghost-neo px-4" type="button" data-bs-dismiss="modal">Close</button>
+              <button class="btn btn-neo btn-primary-neo px-4" type="button" id="useTemplateBtn">Use this template</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- FEEDBACK MODAL -->
+  <div class="modal fade" id="feedbackModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content" style="background: rgba(8,10,18,.85); border: 1px solid rgba(255,255,255,.14); backdrop-filter: blur(14px);">
+        <div class="modal-header" style="border-bottom:1px solid rgba(255,255,255,.10);">
+          <h5 class="modal-title text-white fw-bold">Send Feedback</h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form id="feedbackForm">
+            <div class="mb-3">
+              <label id="fbName" class="form-label" style="color:var(--muted)">Name</label>
+              <input id="fbName" class="form-control bg-transparent text-white" placeholder="Your name" style="border:1px solid rgba(255,255,255,.16)"/>
+            </div>
+            <div class="mb-3">
+              <label id="fbEmail" class="form-label" style="color:var(--muted)">Email</label>
+              <input id="fbEmail" type="email" class="form-control bg-transparent text-white" placeholder="you@example.com" style="border:1px solid rgba(255,255,255,.16)"/>
+            </div>
+            <div class="mb-3">
+              <label id="fbMsg" class="form-label" style="color:var(--muted)">Message</label>
+              <textarea id="fbMsg" class="form-control bg-transparent text-white" rows="4" placeholder="Your feedback..." style="border:1px solid rgba(255,255,255,.16)"></textarea>
+            </div>
+            <div class="d-flex gap-2 justify-content-end">
+              <button class="btn btn-neo btn-ghost-neo px-4" type="button" data-bs-dismiss="modal">Cancel</button>
+              <button class="btn btn-neo btn-primary-neo px-4" type="submit">Submit</button>
+            </div>
+            <div class="text-sm mt-3" style="color:var(--muted)" id="fbStatus">Feedback will be sent to admin management (demo).</div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- PAYMENT MODAL (DEMO) -->
+  <div class="modal fade" id="paymentModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content" style="background: rgba(8,10,18,.85); border: 1px solid rgba(255,255,255,.14); backdrop-filter: blur(14px);">
+        <div class="modal-header" style="border-bottom:1px solid rgba(255,255,255,.10);">
+          <h5 class="modal-title text-white fw-bold">Upgrade to Premium (Demo)</h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <div class="p-3 rounded-4" style="border:1px solid rgba(255,255,255,.12); background: rgba(255,255,255,.05);">
+            <div class="d-flex align-items-center justify-content-between flex-wrap gap-2">
+              <div>
+                <div class="text-white fw-bold">Premium Plan</div>
+                <div class="text-sm" style="color:var(--muted)">Unlock premium templates + unlimited downloads</div>
+              </div>
+              <span class="px-3 py-2 rounded-pill pill text-sm"><i class="bi bi-gem me-1"></i>₹199/mo</span>
+            </div>
+            <hr style="border-color: rgba(255,255,255,.10)" />
+            <div class="row g-3">
+              <div class="col-12">
+                <label class="form-label" style="color:var(--muted)">Card number</label>
+                <input class="form-control bg-transparent text-white" placeholder="4242 4242 4242 4242" style="border:1px solid rgba(255,255,255,.16)"/>
+              </div>
+              <div class="col-6">
+                <label class="form-label" style="color:var(--muted)">Expiry</label>
+                <input class="form-control bg-transparent text-white" placeholder="MM/YY" style="border:1px solid rgba(255,255,255,.16)"/>
+              </div>
+              <div class="col-6">
+                <label class="form-label" style="color:var(--muted)">CVV</label>
+                <input class="form-control bg-transparent text-white" placeholder="123" style="border:1px solid rgba(255,255,255,.16)"/>
+              </div>
+            </div>
+            <div class="d-flex gap-2 justify-content-end mt-4">
+              <button class="btn btn-neo btn-ghost-neo px-4" type="button" data-bs-dismiss="modal">Not now</button>
+              <button class="btn btn-neo btn-primary-neo px-4" type="button" id="payNowBtn">Pay & Unlock (Demo)</button>
+            </div>
+            <div class="text-sm mt-3" style="color:var(--muted)" id="payStatus">
+              Demo payment: on success, premium templates unlock (simulated).
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- POLICY MODAL -->
+  <div class="modal fade" id="policyModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+      <div class="modal-content" style="background: rgba(8,10,18,.85); border: 1px solid rgba(255,255,255,.14); backdrop-filter: blur(14px);">
+        <div class="modal-header" style="border-bottom:1px solid rgba(255,255,255,.10);">
+          <h5 class="modal-title text-white fw-bold">Privacy & Terms (Placeholder)</h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body" style="color:var(--muted)">
+          <p class="mb-2"><span class="text-white fw-semibold">Privacy:</span> Store user data securely; only authorized access via login. Exported resumes belong to the user.</p>
+          <p class="mb-2"><span class="text-white fw-semibold">Terms:</span> AI output is editable; user is responsible for correctness. Premium unlocks additional templates and downloads.</p>
+          <p class="mb-0">Replace this section with your institution/project policy text.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- TOAST -->
+  <div class="position-fixed bottom-0 end-0 p-3" style="z-index: 60">
+    <div id="liveToast" class="toast text-bg-dark border-0" role="alert" aria-live="assertive" aria-atomic="true"
+         style="background: rgba(8,10,18,.88) !important; border:1px solid rgba(255,255,255,.14) !important; backdrop-filter: blur(12px);">
+      <div class="toast-header text-bg-dark border-0" style="background: transparent;">
+        <i class="bi bi-info-circle me-2 text-cyan-200"></i>
+        <strong class="me-auto text-white">AI Resume Builder</strong>
+        <small style="color:var(--muted)">now</small>
+        <button type="button" class="btn-close btn-close-white ms-2 mb-1" data-bs-dismiss="toast" aria-label="Close"></button>
+      </div>
+      <div class="toast-body" id="toastMsg" style="color: rgba(255,255,255,.82)">
+        Demo message
+      </div>
+    </div>
+  </div>
+  <script>
+    AOS.init({ duration: 1200, once: true });
+    // --- Helpers ---
+    const toastEl = document.getElementById('liveToast');
+    const toastMsg = document.getElementById('toastMsg');
+    const bsToast = new bootstrap.Toast(toastEl, { delay: 2600 });
+    function showToast(message){
+      toastMsg.textContent = message;
+      bsToast.show();
+    }
+    function goTo(hash){
+      if(hash.startsWith('#')){
+        document.querySelector(hash)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    }
+    // --- Nav actions (replace these URLs with real routes) ---
+    const routes = {
+      login: 'login.html',
+      register: 'register.html',
+      dashboard: 'dashboard.html'
+    };
+    function demoRedirect(where){
+      showToast(`Redirecting to ${where} (demo). Set real route in JS.`);
+      // window.location.href = routes[where]; // enable in real project
+    }
+    document.getElementById('loginLink').addEventListener('click', (e)=>{ e.preventDefault(); demoRedirect('login'); });
+    document.getElementById('signupLink').addEventListener('click', (e)=>{ e.preventDefault(); demoRedirect('register'); });
+    document.getElementById('heroLoginBtn').addEventListener('click', (e)=>{ e.preventDefault(); demoRedirect('login'); });
+    document.getElementById('finalLoginBtn').addEventListener('click', ()=> demoRedirect('login'));
+    document.getElementById('footerLogin').addEventListener('click', (e)=>{ e.preventDefault(); demoRedirect('login'); });
+    document.getElementById('footerSignup').addEventListener('click', (e)=>{ e.preventDefault(); demoRedirect('register'); });
+    document.getElementById('footerDashboard').addEventListener('click', (e)=>{ e.preventDefault(); demoRedirect('dashboard'); });
+    // CTA: Create resume -> Signup/Login -> Dashboard (demo)
+    function startFlow(){
+      showToast('Create Resume → Signup/Login → Dashboard (demo flow).');
+      // window.location.href = routes.register; // enable in real project
+    }
+    document.getElementById('createResumeBtn').addEventListener('click', (e)=>{ e.preventDefault(); startFlow(); });
+    document.getElementById('startNowBtn').addEventListener('click', startFlow);
+    document.getElementById('finalCtaBtn').addEventListener('click', startFlow);
+    document.getElementById('chooseFreeBtn').addEventListener('click', ()=>{
+      showToast('Continuing with Free plan (demo).');
+      // window.location.href = routes.register;
+    });
+    // Scroll button
+    document.getElementById('scrollToTemplates').addEventListener('click', ()=> goTo('#templates'));
+    // Contact
+    document.getElementById('contactBtn').addEventListener('click', (e)=>{
+      e.preventDefault();
+      showToast('Contact: admin@airesumebuilder.com (placeholder)');
+    });
+    // --- Hero mock AI regenerate ---
+    const summaries = [
+      "Results-driven developer with experience building responsive web apps, secure authentication flows, and scalable APIs. Focused on clean UI and production-ready delivery.",
+      "Detail-oriented engineer skilled in building modern interfaces, integrating APIs, and improving performance for mobile-first experiences across devices.",
+      "Motivated full-stack developer with strong foundation in web technologies, database design, and clean architecture—delivering reliable, user-friendly products."
+    ];
+    const skillSets = [
+      ["React", "Node", "SQL", "UI/UX"],
+      ["Java", "Spring", "MySQL", "REST"],
+      ["Python", "Django", "PostgreSQL", "AWS"]
+    ];
+    const expSets = [
+      [
+        "Designed AI-assisted resume workflows with live preview.",
+        "Implemented secure login and role-based access.",
+        "Optimized performance for mobile-first UX."
+      ],
+      [
+        "Built reusable UI components and improved accessibility.",
+        "Integrated template selection with export pipeline.",
+        "Implemented validation and error-handling patterns."
+      ],
+      [
+        "Developed scalable backend APIs and database schemas.",
+        "Created resume template rendering with customization controls.",
+        "Automated export generation and improved load times."
+      ]
+    ];
+    function rand(arr){ return arr[Math.floor(Math.random()*arr.length)]; }
+    const mockSummary = document.getElementById('mockSummary');
+    const mockSkills = document.getElementById('mockSkills');
+    const mockExp = document.getElementById('mockExp');
+    const aiStatus = document.getElementById('aiStatus');
+    document.getElementById('regenBtn').addEventListener('click', ()=>{
+      const idx = Math.floor(Math.random()*summaries.length);
+      aiStatus.textContent = 'Generating…';
+      aiStatus.classList.remove('grad-text');
+      aiStatus.style.color = 'rgba(255,255,255,.78)';
+      setTimeout(()=>{
+        mockSummary.textContent = summaries[idx];
+        mockSkills.innerHTML = skillSets[idx].map(s => `<span class="px-2 py-1 rounded-pill pill text-sm">${s}</span>`).join('');
+        mockExp.innerHTML = expSets[idx].map(x => `<li>${x}</li>`).join('');
+        aiStatus.textContent = 'Updated';
+        aiStatus.classList.add('grad-text');
+        aiStatus.style.color = '';
+        showToast('AI content regenerated (demo).');
+      }, 520);
+    });
+    // Download demo
+    document.getElementById('downloadBtn').addEventListener('click', ()=>{
+      showToast('Download started (demo). Hook this to PDF/DOCX generation.');
+    });
+    // --- Template preview modal ---
+    const templateModal = new bootstrap.Modal(document.getElementById('templateModal'));
+    const tplName = document.getElementById('tplName');
+    const templateModalTitle = document.getElementById('templateModalTitle');
+    const useTemplateBtn = document.getElementById('useTemplateBtn');
+    let selectedTemplate = 'Professional';
+    document.querySelectorAll('[data-template]').forEach(btn=>{
+      btn.addEventListener('click', ()=>{
+        selectedTemplate = btn.getAttribute('data-template');
+        tplName.textContent = selectedTemplate;
+        templateModalTitle.textContent = `${selectedTemplate} Template Preview`;
+        useTemplateBtn.setAttribute('data-selected', selectedTemplate);
+        templateModal.show();
+      });
+    });
+    document.querySelectorAll('[data-use-template]').forEach(btn=>{
+      btn.addEventListener('click', ()=>{
+        const t = btn.getAttribute('data-use-template');
+        showToast(`Template "${t}" selected → redirect to builder (demo).`);
+        // window.location.href = routes.dashboard;
+      });
+    });
+    useTemplateBtn.addEventListener('click', ()=>{
+      const t = useTemplateBtn.getAttribute('data-selected') || selectedTemplate;
+      templateModal.hide();
+      showToast(`Using "${t}" → redirect to builder (demo).`);
+      // window.location.href = routes.dashboard;
+    });
+    // --- Feedback modal ---
+    const feedbackModal = new bootstrap.Modal(document.getElementById('feedbackModal'));
+    function openFeedback(){ feedbackModal.show(); }
+    document.getElementById('openFeedbackBtn').addEventListener('click', openFeedback);
+    document.getElementById('openFeedbackBtn2').addEventListener('click', openFeedback);
+    document.getElementById('feedbackForm').addEventListener('submit', (e)=>{
+      e.preventDefault();
+      const name = document.getElementById('fbName').value.trim();
+      const email = document.getElementById('fbEmail').value.trim();
+      const msg = document.getElementById('fbMsg').value.trim();
+      const status = document.getElementById('fbStatus');
+      if(!name || !email || !msg){
+        status.textContent = 'Please fill all fields.';
+        status.style.color = 'rgba(255,200,200,.9)';
+        return;
+      }
+      status.textContent = 'Submitted. Admin will review your feedback (demo).';
+      status.style.color = 'rgba(180,255,220,.9)';
+      showToast('Feedback submitted (demo).');
+      setTimeout(()=> feedbackModal.hide(), 700);
+      e.target.reset();
+    });
+    // --- Newsletter form ---
+    document.getElementById('newsletterForm').addEventListener('submit', (e)=>{
+      e.preventDefault();
+      const email = document.getElementById('newsEmail').value.trim();
+      const msg = document.getElementById('newsMsg');
+      if(!email || !/^\S+@\S+\.\S+$/.test(email)){
+        msg.textContent = 'Enter a valid email.';
+        msg.style.color = 'rgba(255,200,200,.9)';
+        return;
+      }
+      msg.textContent = 'Subscribed (demo).';
+      msg.style.color = 'rgba(180,255,220,.9)';
+      showToast('Newsletter subscribed (demo).');
+      e.target.reset();
+    });
+    // --- Pricing compare button ---
+    document.getElementById('compareBtn').addEventListener('click', ()=>{
+      showToast('Compare: Premium unlocks templates + unlimited exports (demo).');
+    });
+    // --- Payment demo ---
+    document.getElementById('payNowBtn').addEventListener('click', ()=>{
+      const payStatus = document.getElementById('payStatus');
+      payStatus.textContent = 'Processing payment...';
+      payStatus.style.color = 'rgba(255,255,255,.72)';
+      setTimeout(()=>{
+        payStatus.textContent = 'Payment success (demo). Premium templates unlocked.';
+        payStatus.style.color = 'rgba(180,255,220,.9)';
+        showToast('Premium unlocked (demo).');
+      }, 800);
+    });
+    // --- Animated counters (only start when visible) ---
+    let countersStarted = false;
+    const countersSection = document.getElementById('ai');
+    const counterEls = Array.from(document.querySelectorAll('[data-counter]'));
+    function animateCounter(el, to){
+      const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      if(prefersReduced){ el.textContent = to.toLocaleString(); return; }
+      const duration = 900;
+      const start = performance.now();
+      const from = 0;
+      function tick(now){
+        const t = Math.min(1, (now - start)/duration);
+        const eased = 1 - Math.pow(1 - t, 3);
+        const val = Math.floor(from + (to - from) * eased);
+        el.textContent = val.toLocaleString();
+        if(t < 1) requestAnimationFrame(tick);
+      }
+      requestAnimationFrame(tick);
+    }
+    const ioCounters = new IntersectionObserver((entries)=>{
+      entries.forEach(entry=>{
+        if(entry.isIntersecting && !countersStarted){
+          countersStarted = true;
+          counterEls.forEach(el => animateCounter(el, parseInt(el.getAttribute('data-counter'), 10)));
+        }
+      });
+    }, { threshold: 0.25 });
+    ioCounters.observe(countersSection);
+    // --- Year ---
+    document.getElementById('year').textContent = new Date().getFullYear();
+  </script>
+</body>
+</html>
